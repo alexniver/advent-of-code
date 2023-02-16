@@ -1,11 +1,9 @@
 use std::fs;
 
-use atoi::FromRadix16;
 use nom::{
     branch::alt,
-    bytes::complete::{tag, take},
+    bytes::complete::tag,
     character::complete::newline,
-    complete,
     multi::{separated_list0, separated_list1},
     sequence::{delimited, separated_pair},
     IResult, Parser,
@@ -46,16 +44,27 @@ impl PartialOrd for Packet {
 }
 
 fn process(input: &str) -> usize {
-    if let Ok((_, pair_arr)) = pair(input) {
-        pair_arr
+    if let Ok((_, pairs)) = pair(input) {
+        let packet_2 = Packet::List(vec![Packet::Num(2)]);
+        let packet_6 = Packet::List(vec![Packet::Num(6)]);
+        let mut packets: Vec<&Packet> = pairs
+            .iter()
+            .flat_map(|p| [&p.left, &p.right])
+            .chain([&packet_2, &packet_6])
+            .collect();
+        packets.sort();
+
+        packets
             .iter()
             .enumerate()
-            .filter_map(|(i, p)| match p.left.cmp(&p.right) {
-                std::cmp::Ordering::Less => Some(i + 1),
-                std::cmp::Ordering::Equal => None,
-                std::cmp::Ordering::Greater => None,
+            .filter_map(|(i, p)| {
+                if p == &&packet_2 || p == &&packet_6 {
+                    Some(i + 1)
+                } else {
+                    None
+                }
             })
-            .sum::<usize>()
+            .product::<usize>()
     } else {
         panic!("en?")
     }
