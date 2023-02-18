@@ -1,11 +1,9 @@
 use std::fs;
 
-use atoi::FromRadix16;
 use nom::{
     branch::alt,
-    bytes::complete::{tag, take},
+    bytes::complete::tag,
     character::complete::newline,
-    complete,
     multi::{separated_list0, separated_list1},
     sequence::{delimited, separated_pair},
     IResult, Parser,
