@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 fn main() {
-    let f = File::open("input-day02-p1.txt").unwrap();
+    let f = File::open("input-day02-p2.txt").unwrap();
     let lines = BufReader::new(f).lines();
 
     let mut safe_num = 0;
